@@ -5,7 +5,7 @@ from telegram import ext
 import config
 import handlers
 from ifi_feed import Feed
-from db import db, Chat
+from db import db, Chat, create_tables
 
 latestEntry = None
 
@@ -47,6 +47,7 @@ class IFIBot:
 
 if __name__ == '__main__':
     with open('token') as f:
+        create_tables()
         bot_token = f.readline().strip()
         IFI_bot = IFIBot(token=bot_token)
         handler_funcs = getmembers(handlers, isfunction)
