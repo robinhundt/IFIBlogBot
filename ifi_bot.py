@@ -15,10 +15,10 @@ def check_for_new_entry(bot, job):
     feed = Feed(config.feed['url'])
     feed.update()
     latest = feed.latest_entry()
-    with db:
-        subscribed_chats = Chat.select().where(Chat.subscribed)
-        if latestEntry is None or latestEntry < latest:
+    if latestEntry is None or latestEntry < latest:
+        with db:
             latestEntry = latest
+            subscribed_chats = Chat.select().where(Chat.subscribed)
             for chat in subscribed_chats:
                 bot.send_message(chat_id=chat.chat_id, parse_mode='Markdown', text=str(latest))
 
@@ -39,7 +39,7 @@ class IFIBot:
 
     def start_bot(self):
         self.updater.start_polling()
-        self.job_queue.run_repeating(check_for_new_entry, interval=10)
+        self.job_queue.run_repeating(check_for_new_entry, interval=3600)
 
     def stop_bot(self):
         self.updater.stop()
