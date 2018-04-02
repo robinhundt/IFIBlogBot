@@ -5,6 +5,7 @@ from telegram import ext
 import config
 import handlers
 from ifi_feed import Feed
+from db import db, Chat
 
 latestEntry = None
 
@@ -14,9 +15,12 @@ def check_for_new_entry(bot, job):
     feed = Feed(config.feed['url'])
     feed.update()
     latest = feed.latest_entry()
-    if latestEntry is None or latestEntry < latest:
-        latestEntry = latest
-        bot.send_message(chat_id='342310826', parse_mode='Markdown', text=str(latest))
+    with db:
+        subscribed_chats = Chat.select().where(Chat.subscribed)
+        if latestEntry is None or latestEntry < latest:
+            latestEntry = latest
+            for chat in subscribed_chats:
+                bot.send_message(chat_id=chat.chat_id, parse_mode='Markdown', text=str(latest))
 
 
 class IFIBot:
@@ -42,7 +46,9 @@ class IFIBot:
 
 
 if __name__ == '__main__':
-    IFI_bot = IFIBot()
-    handler_funcs = getmembers(handlers, isfunction)
-    IFI_bot.init_command_handlers(handler_funcs)
-    IFI_bot.start_bot()
+    with open('token') as f:
+        bot_token = f.readline().strip()
+        IFI_bot = IFIBot(token=bot_token)
+        handler_funcs = getmembers(handlers, isfunction)
+        IFI_bot.init_command_handlers(handler_funcs)
+        IFI_bot.start_bot()
