@@ -1,0 +1,20 @@
+stages:
+  - build
+  - deploy
+
+build:
+  image: docker:latest
+  stage: build
+  script:
+    - echo $BOT_TOKEN > token
+    - docker build -t ifi-blog-bot
+  only:
+    - master
+
+deploy:
+  image: docker:latest
+  stage: deploy
+  script:
+    - docker run -d --restart on-failure --name IFIBlogBot -v ifibot_db:/db ifi-blog-bot:latest
+  only:
+    - master

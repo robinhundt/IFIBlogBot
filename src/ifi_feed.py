@@ -18,9 +18,7 @@ class Entry:
         return self.published < other.published
 
     def __str__(self):
-        return f"*{self.title}*\n" \
-               f"{self.summary}\n" \
-               f"{self.link}"
+        return html.unescape(f"*{self.title}*\n{self.summary}\n{self.link}")
 
 
 class Feed:
@@ -38,7 +36,8 @@ class Feed:
         self.title = self.feed['feed']['title']
         self.link = self.feed['feed']['link']
         self.updated = self.feed['feed']['updated']
-        self.entries = sorted([Entry(entry) for entry in self.feed['entries']], reverse=True)
+        self.entries = sorted([Entry(entry) for entry in self.feed['entries']],
+                              reverse=True)
 
     def latest_entry(self):
-        return html.unescape(self.entries[0])
+        return self.entries[0]

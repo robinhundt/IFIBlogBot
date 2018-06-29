@@ -2,7 +2,7 @@ from inspect import getmembers, isfunction
 
 from telegram import ext
 
-import config
+from settings import conf
 from src import handlers
 from src.ifi_feed import Feed
 from src.db import db, Chat, create_tables
@@ -15,8 +15,6 @@ class IFIBot:
         self.dispatcher = self.updater.dispatcher
         self.job_queue = self.updater.job_queue
         self.command_handlers = {}
-
-        self.latest_entry = None
 
     def init_command_handlers(self, cmd_funcs):
         for cmd_func in cmd_funcs:
@@ -32,19 +30,21 @@ class IFIBot:
         self.updater.stop()
 
     def _check_for_new_entry(self, bot, job):
-        feed = Feed(config.feed['url'])
+        feed = Feed(conf.feed['url'])
         feed.update()
         latest = feed.latest_entry()
-        if self.latest_entry is None or self.latest_entry < latest:
-            with db:
-                self.latest_entry = latest
-                subscribed_chats = Chat.select().where(Chat.subscribed)
-                for chat in subscribed_chats:
+        with db:
+            self.latest_entry = latest
+            subscribed_chats = Chat.select().where(Chat.subscribed)
+            for chat in subscribed_chats:
+                if chat.datetime_last_received_entry < latest.published:
                     bot.send_message(chat_id=chat.chat_id, parse_mode='Markdown', text=str(latest))
+                    chat.datetime_last_received_entry = latest.published
+                    chat.save()
 
 
 if __name__ == '__main__':
-    with open('../token') as f:
+    with open('token') as f:
         bot_token = f.readline().strip()
     create_tables()
     IFI_bot = IFIBot(token=bot_token)

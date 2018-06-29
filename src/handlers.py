@@ -1,4 +1,4 @@
-import config
+from settings import conf
 from src.ifi_feed import Feed
 from src.db import Chat, db
 
@@ -40,8 +40,11 @@ def blog(bot, update):
 
 
 def blog_latest(bot, update):
-    feed = Feed(config.feed['url'])
+    feed = Feed(conf.feed['url'])
     feed.update()
-    bot.send_message(chat_id=update.message.chat_id, parse_mode='Markdown',
-                     text=str(feed.latest_entry()))
-
+    with db:
+        chat, _ = Chat.get_or_create(chat_id=update.message.chat_id)
+        bot.send_message(chat_id=chat.chat_id, parse_mode='Markdown',
+                         text=str(feed.latest_entry()))
+        chat.datetime_last_received_entry = feed.latest_entry().published
+        chat.save()

@@ -1,11 +1,15 @@
 FROM python:3.6
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY requirements.txt ./
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./ifi_bot.py" ]
+RUN mkdir /db
+VOLUME /db
+
+ENV PYTHONPATH .
+CMD [ "python", "./src/ifi_bot.py" ]
 
