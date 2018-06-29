@@ -7,7 +7,7 @@ build:
   stage: build
   script:
     - echo $BOT_TOKEN > token
-    - docker build -t ifi-blog-bot
+    - docker build -t ifi-blog-bot .
   only:
     - master
 
