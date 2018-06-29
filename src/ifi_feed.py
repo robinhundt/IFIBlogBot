@@ -1,4 +1,6 @@
 import feedparser
+import html
+
 from dateutil import parser
 
 
@@ -39,4 +41,4 @@ class Feed:
         self.entries = sorted([Entry(entry) for entry in self.feed['entries']], reverse=True)
 
     def latest_entry(self):
-        return self.entries[0]
+        return html.unescape(self.entries[0])

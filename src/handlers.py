@@ -1,6 +1,6 @@
 import config
-from ifi_feed import Feed
-from db import Chat, db
+from src.ifi_feed import Feed
+from src.db import Chat, db
 
 
 def start(bot, update):
@@ -20,8 +20,8 @@ def stop(bot, update):
         chat.save()
         if created:
             bot.send_message(chat_id=chat.chat_id, parse_mode='Markdown',
-                             text="Since you weren't subscribed in the first place,"
-                                  "you'll receive no more automatic messages.")
+                             text="Since you weren't subscribed in the first place, "
+                                  "you'll receive no automatic messages.")
         else:
             bot.send_message(chat_id=chat.chat_id, parse_mode='Markdown',
                              text="You'll receive no more automatic blog updates.")
@@ -29,7 +29,7 @@ def stop(bot, update):
 
 def about(bot, update):
     bot.send_message(chat_id=update.message.chat_id, parse_mode='Markdown',
-                     text="Hey! I'm a small bot written by @robinhundt that serves you the"
+                     text="Hey! I'm a small bot written by @robinhundt that serves you the "
                           "newest updates from the blog of the cs deanery in Goettingen.")
 
 

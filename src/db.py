@@ -1,6 +1,6 @@
 from peewee import SqliteDatabase, Model, IntegerField, BooleanField
 
-db = SqliteDatabase('ifi_blog_chats.db')
+db = SqliteDatabase('../db/ifi_blog_chats.db')
 
 
 def create_tables():
@@ -14,4 +14,3 @@ class Chat(Model):
 
     class Meta:
         database = db
-
