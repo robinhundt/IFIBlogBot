@@ -39,14 +39,16 @@ deploy:
 
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker run -d --restart on-failure  -v ifibot_db:/db $IMAGE_TAG
+    - docker-compose stop
+    - docker-compose pull
+    - docker-compose up -d --force-recreate
   only:
     - master
 
 deploy_stop:
   <<: *deploy_definition
   script:
-    - docker rm --force $IMAGE_TAG
+    - docker-compose rm --force --stop
   when: manual
   environment:
     name: review/$CI_COMMIT_REF_NAME
