@@ -10,7 +10,6 @@ build:
   image: docker:stable
   stage: build
   script:
-    - echo $BOT_TOKEN > token
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $IMAGE_TAG .
     - docker tag $IMAGE_TAG $IMAGE_TAG-$CI_COMMIT_SHA

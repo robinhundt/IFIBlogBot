@@ -1,4 +1,5 @@
 from inspect import getmembers, isfunction
+import os
 
 from telegram import ext
 
@@ -44,8 +45,7 @@ class IFIBot:
 
 
 if __name__ == '__main__':
-    with open('token') as f:
-        bot_token = f.readline().strip()
+    bot_token = os.environ['BOT_TOKEN']
     create_tables()
     IFI_bot = IFIBot(token=bot_token)
     handler_funcs = getmembers(handlers, isfunction)

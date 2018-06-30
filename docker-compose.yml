@@ -5,6 +5,8 @@ services:
     restart: on-failure
     volumes:
       - ifibot_db:/db
+    environment:
+      - BOT_TOKEN
 
 volumes:
   ifibot_db: {}
