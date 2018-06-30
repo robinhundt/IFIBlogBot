@@ -30,7 +30,9 @@ def stop(bot, update):
 def about(bot, update):
     bot.send_message(chat_id=update.message.chat_id, parse_mode='Markdown',
                      text="Hey! I'm a small bot written by @robinhundt that serves you the "
-                          "newest updates from the blog of the cs deanery in Goettingen.")
+                          "newest updates from the blog of the cs deanery in Goettingen.  "
+                          "My source code is available on "
+                          "[gitlab.gwdg.de](https://gitlab.gwdg.de/robinwilliam.hundt/IFIBlogBot)")
 
 
 def blog(bot, update):
