@@ -7,6 +7,6 @@ services:
       - ifibot_db:/db
 
 volumes:
-  - ifibot_db: {}
+  ifibot_db: {}
 
 
