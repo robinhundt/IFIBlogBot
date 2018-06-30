@@ -39,8 +39,7 @@ deploy:
 
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker rm --force $IMAGE_TAG
-    - docker run -d --restart on-failure --name IFIBlogBot -v ifibot_db:/db $IMAGE_TAG
+    - docker run -d --restart on-failure  -v ifibot_db:/db $IMAGE_TAG
   only:
     - master
 
